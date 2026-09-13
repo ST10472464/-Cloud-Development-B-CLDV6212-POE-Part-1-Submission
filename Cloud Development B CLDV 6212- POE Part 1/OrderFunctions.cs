@@ -55,18 +55,28 @@ namespace CoffeeNChill.Functions
             if (order.OrderTimestamp == default)
                 order.OrderTimestamp = DateTime.UtcNow;
 
-            var queueClient = new QueueClient(_connectionString, QueueName);
-            await queueClient.CreateIfNotExistsAsync();
+            try
+            {
+                var queueClient = new QueueClient(_connectionString, QueueName);
+                await queueClient.CreateIfNotExistsAsync();
 
-            string message = JsonSerializer.Serialize(order);
-            string base64Message = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message));
-            await queueClient.SendMessageAsync(base64Message);
+                string message = JsonSerializer.Serialize(order);
+                string base64Message = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message));
+                await queueClient.SendMessageAsync(base64Message);
 
-            _logger.LogInformation("Order {OrderId} queued for {CustomerName}", order.OrderId, order.CustomerName);
+                _logger.LogInformation("Order {OrderId} queued for {CustomerName}", order.OrderId, order.CustomerName);
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(new { message = "Order queued successfully", orderId = order.OrderId });
-            return response;
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteAsJsonAsync(new { message = "Order queued successfully", orderId = order.OrderId });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to queue order {OrderId}", order.OrderId);
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+                await errorResponse.WriteStringAsync($"Failed to queue order: {ex.Message}");
+                return errorResponse;
+            }
         }
 
         [Function("ProcessOrderQueue")]
@@ -83,18 +93,14 @@ namespace CoffeeNChill.Functions
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to deserialize queue message, moving to poison queue");
-                var poisonClient = new QueueClient(_connectionString, PoisonQueueName);
-                await poisonClient.CreateIfNotExistsAsync();
-                await poisonClient.SendMessageAsync(queueMessage);
+                await SendToPoisonQueue(queueMessage);
                 return;
             }
 
             if (order == null || string.IsNullOrEmpty(order.OrderId))
             {
                 _logger.LogError("Invalid order payload in queue message");
-                var poisonClient = new QueueClient(_connectionString, PoisonQueueName);
-                await poisonClient.CreateIfNotExistsAsync();
-                await poisonClient.SendMessageAsync(queueMessage);
+                await SendToPoisonQueue(queueMessage);
                 return;
             }
 
@@ -137,9 +143,21 @@ namespace CoffeeNChill.Functions
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing order {OrderId}, moving to poison queue", order.OrderId);
+                await SendToPoisonQueue(queueMessage);
+            }
+        }
+
+        private async Task SendToPoisonQueue(string message)
+        {
+            try
+            {
                 var poisonClient = new QueueClient(_connectionString, PoisonQueueName);
                 await poisonClient.CreateIfNotExistsAsync();
-                await poisonClient.SendMessageAsync(queueMessage);
+                await poisonClient.SendMessageAsync(message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send message to poison queue");
             }
         }
 

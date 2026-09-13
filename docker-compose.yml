@@ -10,6 +10,8 @@ services:
       - "10002:10002"
     volumes:
       - azurite-data:/data
+    networks:
+      - coffeennchill-net
 
   functions:
     image: ${DOCKERHUB_USERNAME}/coffeennchill-functions:v2.0
@@ -21,6 +23,12 @@ services:
       - FUNCTIONS_WORKER_RUNTIME=dotnet-isolated
     depends_on:
       - azurite
+    networks:
+      - coffeennchill-net
+
+networks:
+  coffeennchill-net:
+    driver: bridge
 
 volumes:
   azurite-data:
