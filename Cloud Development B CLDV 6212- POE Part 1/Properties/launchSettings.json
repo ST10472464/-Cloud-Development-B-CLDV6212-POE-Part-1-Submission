@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Cloud_Development_B_CLDV_6212__POE_Part_1": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7058",
+      "launchBrowser": false
+    }
+  }
+}
