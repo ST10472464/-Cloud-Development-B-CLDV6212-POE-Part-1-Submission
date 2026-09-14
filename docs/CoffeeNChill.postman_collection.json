@@ -1,0 +1,471 @@
+{
+  "info": {
+    "name": "CoffeeNChill API - Complete Collection",
+    "_postman_id": "coffeennchill-complete",
+    "description": "Complete API collection for CoffeeNChill Canteen Management System - Parts 1 & 2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:7058"
+    }
+  ],
+  "item": [
+    {
+      "name": "Menu Operations",
+      "item": [
+        {
+          "name": "Create Menu Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has required fields', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json PartitionKey).to.eql('Hot Drinks');",
+                  "    pm.expect(json.RowKey).to.eql('COF-001');",
+                  "    pm.expect(json.Name).to.eql('Espresso');",
+                  "    pm.expect(json.Price).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "menu"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"PartitionKey\": \"Hot Drinks\",\n  \"RowKey\": \"COF-001\",\n  \"Name\": \"Espresso\",\n  \"Description\": \"Strong Italian coffee shot\",\n  \"Price\": 25.00,\n  \"IsAvailable\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Cold Drink",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "menu"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"PartitionKey\": \"Cold Drinks\",\n  \"RowKey\": \"COL-001\",\n  \"Name\": \"Iced Latte\",\n  \"Description\": \"Cold milk coffee with ice\",\n  \"Price\": 35.00,\n  \"IsAvailable\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Menu Items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "    pm.expect(json.length).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "menu"]
+            }
+          }
+        },
+        {
+          "name": "Get Menu Items by Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('All items match category', function () {",
+                  "    var json = pm.response.json();",
+                  "    json.forEach(function(item) {",
+                  "        pm.expect(item.PartitionKey).to.eql('Hot Drinks');",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/menu/category/Hot Drinks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "menu", "category", "Hot Drinks"]
+            }
+          }
+        },
+        {
+          "name": "Update Menu Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Price was updated', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.Price).to.eql(30.00);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/menu/Hot Drinks/COF-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "menu", "Hot Drinks", "COF-001"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Name\": \"Espresso\",\n  \"Description\": \"Strong Italian coffee shot\",\n  \"Price\": 30.00,\n  \"IsAvailable\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Menu Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/menu/Hot Drinks/COF-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "menu", "Hot Drinks", "COF-001"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Document Operations",
+      "item": [
+        {
+          "name": "Upload Staff Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has fileName', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.fileName).to.be.a('string');",
+                  "    pm.expect(json.size).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "upload"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "C:\\Users\\emeris\\coffeennchill\\docs\\sample-recipe.pdf"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Staff Documents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents"]
+            }
+          }
+        },
+        {
+          "name": "Download Staff Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is present', function () {",
+                  "    pm.response.to.have.header('Content-Type');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/download/sample-recipe.pdf",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "download", "sample-recipe.pdf"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Operations",
+      "item": [
+        {
+          "name": "Queue Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has orderId', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.orderId).to.eql('ORD-2026-8801');",
+                  "    pm.expect(json.message).to.include('queued');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/queue",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "queue"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"OrderId\": \"ORD-2026-8801\",\n  \"CustomerName\": \"Jane Smith\",\n  \"SelectedItemSKUs\": [\"COF-001\", \"PAS-104\"],\n  \"TotalPrice\": 65.00,\n  \"OrderTimestamp\": \"2026-10-12T10:15:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Queue Second Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/queue",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "queue"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"OrderId\": \"ORD-2026-8802\",\n  \"CustomerName\": \"John Doe\",\n  \"SelectedItemSKUs\": [\"COL-001\"],\n  \"TotalPrice\": 35.00,\n  \"OrderTimestamp\": \"2026-10-12T10:20:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Orders exist in table', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "    pm.expect(json.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('Order status is Collected (after processing)', function () {",
+                  "    var json = pm.response.json();",
+                  "    var order = json.find(o => o.rowKey === 'ORD-2026-8801');",
+                  "    if (order) {",
+                  "        pm.expect(order.status).to.eql('Collected');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Orders by Date",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Orders match date partition', function () {",
+                  "    var json = pm.response.json();",
+                  "    json.forEach(function(order) {",
+                  "        pm.expect(order.partitionKey).to.eql('2026-10-12');",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/2026-10-12",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "2026-10-12"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
