@@ -1,0 +1,69 @@
+{
+  "info": {
+    "_postman_id": "f7c63ee2-cb77-4369-a811-919909dd01ae",
+    "name": "CLOUD DEVELOPMENT B CLDV6212-Poe Part 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58191986",
+    "_collection_link": "https://go.postman.co/collection/58191986-f7c63ee2-cb77-4369-a811-919909dd01ae?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "New Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"partitionKey\": \"Hot Drinks\",\r\n  \"rowKey\": \"COF-001\",\r\n  \"name\": \"Cappuccino\",\r\n  \"description\": \"Rich espresso with steamed milk and foam\",\r\n  \"price\": 3.50,\r\n  \"isAvailable\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7058/api/menu",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "7058",
+          "path": [
+            "api",
+            "menu"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Poe Part 1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"partitionKey\": \"Hot Drinks\",\r\n  \"rowKey\": \"COF-001\",\r\n  \"name\": \"Cappuccino\",\r\n  \"description\": \"Rich espresso with steamed milk and foam\",\r\n  \"price\": 3.50,\r\n  \"isAvailable\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7058/api/menu",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "7058",
+          "path": [
+            "api",
+            "menu"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
