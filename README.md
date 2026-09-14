@@ -166,6 +166,25 @@ Import the Postman collection from `/docs/CoffeeNChill.postman_collection.json` 
 
 ---
 
+## References
+
+| Technology | Reference |
+|---|---|
+| Azure Functions .NET Isolated Worker | [Microsoft Docs — Azure Functions .NET worker](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide) |
+| Azure Table Storage — ITableEntity | [Microsoft Docs — ITableEntity Interface](https://learn.microsoft.com/en-us/dotnet/api/azure.data.tables.itableentity) |
+| Azure Tables Client Library | [Microsoft Docs — Azure.Data.Tables](https://learn.microsoft.com/en-us/azure/storage/tables/table-storage-how-to-use-dotnet) |
+| Azure File Share SDK | [Microsoft Docs — Azure.Storage.Files.Shares](https://learn.microsoft.com/en-us/azure/storage/files/storage-dotnet-how-to-use-files) |
+| Azure Queue Storage + QueueTrigger | [Microsoft Docs — Queue storage output binding](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue-trigger) |
+| Azurite — Local Storage Emulator | [Microsoft Docs — Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) |
+| Docker — Containerization | [Docker Docs — Build and run](https://docs.docker.com/build/) |
+| Docker Compose — Multi-container | [Docker Docs — Compose](https://docs.docker.com/compose/) |
+| Docker Hub — Image Publishing | [Docker Docs — Docker Hub](https://docs.docker.com/docker-hub/) |
+| Azure Functions Core Tools | [Microsoft Docs — Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local) |
+| Postman — API Testing | [Postman Docs — Testing APIs](https://learning.postman.com/docs/writing-scripts/test-scripts/) |
+| CLDV6212 Module | UNISA — Cloud Development 2B |
+
+---
+
 ## Contributing
 Each team member must make a minimum of 5 meaningful commits per part.
 

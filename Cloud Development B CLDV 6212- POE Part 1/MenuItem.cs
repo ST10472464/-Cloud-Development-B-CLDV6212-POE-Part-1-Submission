@@ -3,7 +3,8 @@ using Azure.Data.Tables;
 
 namespace Cloud_Development_B_CLDV_6212__POE_Part_1
 {
-    // (Microsoft Learn, 2026) (ITableEntity Interface)
+    // Microsoft Learn — ITableEntity Interface
+    // https://learn.microsoft.com/en-us/dotnet/api/azure.data.tables.itableentity
     public class MenuItem : ITableEntity
     {
         public string PartitionKey { get; set; } = default!;
