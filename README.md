@@ -69,13 +69,13 @@ CoffeeNChill is a cloud-enabled microservices system for managing a campus cante
 5. **Docker Commands (Part 1):**
    ```bash
    # Build the image
-   docker build -t <dockerhub_username>/coffeennchill-functions:v1.0 .
+   docker build -t st10472501/coffeennchill-functions:v1.0 .
 
    # Run the container
-   docker run -p 7058:80 <dockerhub_username>/coffeennchill-functions:v1.0
+   docker run -p 7058:80 st10472501/coffeennchill-functions:v1.0
 
    # Push to Docker Hub
-   docker push <dockerhub_username>/coffeennchill-functions:v1.0
+   docker push st10472501/coffeennchill-functions:v1.0
    ```
 
 ---
@@ -113,7 +113,7 @@ CoffeeNChill is a cloud-enabled microservices system for managing a campus cante
 1. **Docker Compose (Recommended):**
    ```bash
    # Set your Docker Hub username
-   export DOCKERHUB_USERNAME=<your_dockerhub_username>
+   export DOCKERHUB_USERNAME=st10472501
 
    # Start all services
    docker-compose up -d
@@ -135,10 +135,10 @@ CoffeeNChill is a cloud-enabled microservices system for managing a campus cante
 ### Docker Commands (Part 2)
    ```bash
    # Build the v2.0 image
-   docker build -t <dockerhub_username>/coffeennchill-functions:v2.0 .
+   docker build -t st10472501/coffeennchill-functions:v2.0 .
 
    # Push to Docker Hub
-   docker push <dockerhub_username>/coffeennchill-functions:v2.0
+   docker push st10472501/coffeennchill-functions:v2.0
 
    # Run with Docker Compose
    docker-compose up -d
