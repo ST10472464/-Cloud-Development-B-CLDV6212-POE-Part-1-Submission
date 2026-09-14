@@ -61,8 +61,9 @@ namespace CoffeeNChill.Functions
                 await queueClient.CreateIfNotExistsAsync();
 
                 string message = JsonSerializer.Serialize(order);
-                string base64Message = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message));
-                await queueClient.SendMessageAsync(base64Message);
+                var bytes = System.Text.Encoding.UTF8.GetBytes(message);
+                var base64 = Convert.ToBase64String(bytes);
+                await queueClient.SendMessageAsync(base64);
 
                 _logger.LogInformation("Order {OrderId} queued for {CustomerName}", order.OrderId, order.CustomerName);
 
@@ -81,13 +82,14 @@ namespace CoffeeNChill.Functions
 
         [Function("ProcessOrderQueue")]
         public async Task ProcessOrderQueue(
-            [QueueTrigger("order-processing-queue", Connection = "AzureWebJobsStorage")] string queueMessage,
-            FunctionContext context)
+            [QueueTrigger("order-processing-queue", Connection = "AzureWebJobsStorage")] string queueMessage)
         {
+            _logger.LogInformation("ProcessOrderQueue triggered with message length: {Length}", queueMessage?.Length ?? 0);
+
             Order? order = null;
             try
             {
-                string json = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(queueMessage));
+                string json = queueMessage;
                 order = JsonSerializer.Deserialize<Order>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
             catch (Exception ex)
@@ -125,15 +127,24 @@ namespace CoffeeNChill.Functions
                 await tableClient.AddEntityAsync(orderEntity);
                 _logger.LogInformation("Order {OrderId} status: Received", order.OrderId);
 
+                var fetched = await tableClient.GetEntityAsync<OrderEntity>(orderEntity.PartitionKey, orderEntity.RowKey);
+                orderEntity = fetched.Value;
+
                 await Task.Delay(2000);
                 orderEntity.Status = "Preparing";
                 await tableClient.UpdateEntityAsync(orderEntity, orderEntity.ETag, TableUpdateMode.Replace);
                 _logger.LogInformation("Order {OrderId} status: Preparing", order.OrderId);
 
+                fetched = await tableClient.GetEntityAsync<OrderEntity>(orderEntity.PartitionKey, orderEntity.RowKey);
+                orderEntity = fetched.Value;
+
                 await Task.Delay(3000);
                 orderEntity.Status = "Ready";
                 await tableClient.UpdateEntityAsync(orderEntity, orderEntity.ETag, TableUpdateMode.Replace);
                 _logger.LogInformation("Order {OrderId} status: Ready", order.OrderId);
+
+                fetched = await tableClient.GetEntityAsync<OrderEntity>(orderEntity.PartitionKey, orderEntity.RowKey);
+                orderEntity = fetched.Value;
 
                 await Task.Delay(2000);
                 orderEntity.Status = "Collected";
